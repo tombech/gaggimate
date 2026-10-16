@@ -20,3 +20,14 @@ sim_data/
 out/
 
 web/store
+
+# pioarduino build artifacts
+sdkconfig.display
+sdkconfig.display-*
+sdkconfig.controller
+sdkconfig.controller-*
+sdkconfig.defaults
+managed_components/
+dependencies.lock
+# pioarduino dual-framework hybrid-compile scaffold (auto-generated)
+.dummy/
