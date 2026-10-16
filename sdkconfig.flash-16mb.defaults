@@ -1,0 +1,2 @@
+# Flash size for 16MB boards (IDF takes it from sdkconfig, not the board JSON; default is 2MB).
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
