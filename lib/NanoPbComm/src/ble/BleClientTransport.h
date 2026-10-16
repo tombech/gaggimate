@@ -8,7 +8,7 @@
 
 // BLE central (client) transport for the display: scans, connects, subscribes TX / writes RX (one datagram per op).
 // Pairing: bonds to the first controller found, then connects only to it until clearBonds(); links encrypted before GATT use.
-class BleClientTransport : public Transport, public NimBLEAdvertisedDeviceCallbacks, public NimBLEClientCallbacks {
+class BleClientTransport : public Transport, public NimBLEScanCallbacks, public NimBLEClientCallbacks {
   public:
     BleClientTransport() = default;
 
@@ -58,7 +58,7 @@ class BleClientTransport : public Transport, public NimBLEAdvertisedDeviceCallba
     bool isEncrypted() const;
     void loadPairedPeer();
     void savePairedPeer(const NimBLEAddress &address);
-    bool isLockedToOther(NimBLEAdvertisedDevice *advertisedDevice) const;
+    bool isLockedToOther(const NimBLEAdvertisedDevice *advertisedDevice) const;
 
     // Connection-interval units are 1.25ms; supervision timeout units are 10ms.
     // Active rungs, tightest first; with a scale link on the same radio the controller refuses the tight ones (HCI 0x12).
@@ -69,8 +69,8 @@ class BleClientTransport : public Transport, public NimBLEAdvertisedDeviceCallba
     static constexpr uint16_t CONN_LATENCY = 0;
     static constexpr uint16_t CONN_TIMEOUT = 400; // 4 s
 
-    void onResult(NimBLEAdvertisedDevice *advertisedDevice) override;
-    void onDisconnect(NimBLEClient *client) override;
+    void onResult(const NimBLEAdvertisedDevice *advertisedDevice) override;
+    void onDisconnect(NimBLEClient *client, int reason) override;
     void notifyCallback(NimBLERemoteCharacteristic *characteristic, uint8_t *data, size_t length, bool isNotify);
 
     static constexpr const char *LOG_TAG = "BleClientTransport";

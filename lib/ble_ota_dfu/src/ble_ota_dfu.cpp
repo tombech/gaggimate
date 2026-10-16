@@ -100,7 +100,7 @@ void BLEOverTheAirDeviceFirmwareUpdate::onDisconnect() {
         abort_update("Disconnected");
 }
 
-void BLEOverTheAirDeviceFirmwareUpdate::onWrite(BLECharacteristic *pCharacteristic) {
+void BLEOverTheAirDeviceFirmwareUpdate::onWrite(BLECharacteristic *pCharacteristic, NimBLEConnInfo & /*connInfo*/) {
     std::string value = pCharacteristic->getValue();
     const size_t len = value.length();
     const auto *pData = reinterpret_cast<const uint8_t *>(value.data());

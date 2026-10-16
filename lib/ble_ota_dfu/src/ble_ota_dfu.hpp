@@ -42,7 +42,7 @@ class BLEOverTheAirDeviceFirmwareUpdate final : public BLECharacteristicCallback
     friend class BLE_OTA_DFU;
     BLE_OTA_DFU *OTA_DFU_BLE;
 
-    void onWrite(BLECharacteristic *pCharacteristic) override;
+    void onWrite(BLECharacteristic *pCharacteristic, NimBLEConnInfo &connInfo) override;
     void onDisconnect();
 };
 
