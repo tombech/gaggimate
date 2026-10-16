@@ -21,6 +21,14 @@ CONFIG_IDF_TARGET="esp32s3"
 CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
 CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=240
 
+# --- MAC address layout (BLE pairing depends on it) ---
+# Keep TWO universal MACs, as the prebuilt arduino-esp32 2.x sdkconfig had: WiFi STA = base, BT = base+1.
+# IDF's S3 default is FOUR, which moves BT to base+2 -- and GaggiMate pairs display and controller by BLE
+# address (the controller sends directed adverts to the stored display address), so a board moving from
+# the arduino build would otherwise lose its pairing.
+CONFIG_ESP32S3_UNIVERSAL_MAC_ADDRESSES_TWO=y
+# CONFIG_ESP32S3_UNIVERSAL_MAC_ADDRESSES_FOUR is not set
+
 # --- Compiler optimization ---
 # Optimize for size (-Os), matching arduino-esp32. IDF's default is -Og (debug),
 # which is slower across the board. SIZE (not PERF/-O2) keeps flash/IRAM in

@@ -37,6 +37,12 @@ REQUIRED = [
         "Set CONFIG_COMPILER_OPTIMIZATION_SIZE=y in sdkconfig.common.defaults, "
         "then `pio run -e <env> -t fullclean`.",
     ),
+    (
+        "TWO universal MACs (BT = base+1, as the arduino 2.x build) so BLE pairings survive the migration",
+        lambda t: "#define CONFIG_ESP_MAC_UNIVERSAL_MAC_ADDRESSES 2" in t,
+        "Set CONFIG_ESP32S3_UNIVERSAL_MAC_ADDRESSES_TWO=y in sdkconfig.common.defaults, "
+        "delete the cached sdkconfig.<env>, then rebuild.",
+    ),
 ]
 
 
