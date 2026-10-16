@@ -59,7 +59,13 @@ void PreferencesCodec<std::vector<AutoWakeupSchedule>>::write(Preferences &prefs
     prefs.putString(key, serialized);
 }
 
-Settings::Settings() {
+// NVS is read in load(), not here: the global ctor runs before NVS is ready under IDF 5.
+Settings::Settings() = default;
+
+void Settings::load() {
+    if (taskHandle != nullptr) {
+        return;
+    }
     preferences.begin(PREFERENCES_KEY, true);
     for (auto *property : registry) {
         property->load(preferences);

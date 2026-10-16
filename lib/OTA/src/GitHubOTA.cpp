@@ -12,8 +12,21 @@
 // the update instead of unsubscribing anyone: a real hang still reboots, just later.
 struct OtaWatchdogRelax {
     static constexpr uint32_t UPDATE_TIMEOUT_S = 60;
-    OtaWatchdogRelax() { esp_task_wdt_init(UPDATE_TIMEOUT_S, true); }
-    ~OtaWatchdogRelax() { esp_task_wdt_init(CONFIG_ESP_TASK_WDT_TIMEOUT_S, true); }
+    static void set(uint32_t seconds) {
+        esp_task_wdt_config_t cfg = {};
+        cfg.timeout_ms = seconds * 1000;
+        cfg.idle_core_mask = 0;
+#ifdef CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0
+        cfg.idle_core_mask |= 1 << 0;
+#endif
+#ifdef CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1
+        cfg.idle_core_mask |= 1 << 1;
+#endif
+        cfg.trigger_panic = true;
+        esp_task_wdt_reconfigure(&cfg);
+    }
+    OtaWatchdogRelax() { set(UPDATE_TIMEOUT_S); }
+    ~OtaWatchdogRelax() { set(CONFIG_ESP_TASK_WDT_TIMEOUT_S); }
 };
 
 GitHubOTA::GitHubOTA(const String &display_version, const String &controller_version, const String &release_url,
@@ -29,7 +42,8 @@ GitHubOTA::GitHubOTA(const String &display_version, const String &controller_ver
     _phase_callback = phase_callback;
     _progress_callback = progress_callback;
 
-    _wifi_client.setCACertBundle(x509_crt_imported_bundle_bin_start);
+    _wifi_client.setCACertBundle(x509_crt_imported_bundle_bin_start,
+                                 x509_crt_imported_bundle_bin_end - x509_crt_imported_bundle_bin_start);
 }
 
 void GitHubOTA::init() {

@@ -37,7 +37,7 @@ class ADSAdc {
     int _value[4] = {0, 0, 0, 0};
     ADS1115 *ads = nullptr;
     ads_callback_t _callback;
-    xTaskHandle taskHandle;
+    TaskHandle_t taskHandle;
     esp_timer_handle_t _timer = nullptr;
     AdcSchedule _schedule;
     int64_t _conversionStarted = 0;
@@ -57,7 +57,7 @@ class ADSAdc {
     static void onTick(void *arg);
 
     const char *LOG_TAG = "ADSAdc";
-    static void loopTask(void *arg);
+    [[noreturn]] static void loopTask(void *arg);
 };
 
 #endif // ADS_ADC_H

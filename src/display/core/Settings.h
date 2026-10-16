@@ -75,6 +75,8 @@ class Settings {
   public:
     Settings();
 
+    void load();
+
     void batchUpdate(const SettingsCallback &callback);
     void save(bool noDelay = false);
 
@@ -417,7 +419,7 @@ class Settings {
     Property<float> maxPumpPower{registry, "p_mp", 1.0f};
 
     void doSave();
-    xTaskHandle taskHandle;
+    TaskHandle_t taskHandle = nullptr;
     [[noreturn]] static void loopTask(void *arg);
 };
 

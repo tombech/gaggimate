@@ -10,9 +10,6 @@
 
 static const char *TAG = "EspHttpTransport";
 
-// Arduino replaces the IDF bundle with its own copy; attach only works after the bundle was set.
-extern const uint8_t x509_crt_imported_bundle_bin_start[] asm("_binary_x509_crt_bundle_start");
-
 bool EspHttpTransport::begin(const std::string &url) {
     end();
     if (url.compare(0, 8, "https://") != 0) {
@@ -20,12 +17,11 @@ bool EspHttpTransport::begin(const std::string &url) {
         return false;
     }
     _url = url;
-    arduino_esp_crt_bundle_set(x509_crt_imported_bundle_bin_start);
     esp_http_client_config_t config = {};
     config.url = _url.c_str();
     config.event_handler = onEvent;
     config.user_data = this;
-    config.crt_bundle_attach = arduino_esp_crt_bundle_attach;
+    config.crt_bundle_attach = esp_crt_bundle_attach;
     config.timeout_ms = _timeoutMs;
     config.buffer_size = 2048;    // rx: header lines, including the ~1.3 KB signed CDN Location
     config.buffer_size_tx = 4096; // tx: the request line carries the signed CDN path after the redirect

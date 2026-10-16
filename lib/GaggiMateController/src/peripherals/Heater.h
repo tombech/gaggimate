@@ -55,7 +55,7 @@ class Heater {
     float calculateSafetyScaling(float tempError);
     TemperatureSensor *sensor;
     uint8_t heaterPin;
-    xTaskHandle taskHandle;
+    TaskHandle_t taskHandle;
     SimplePID *simplePid = nullptr;
     Autotune *autotuner = nullptr;
 

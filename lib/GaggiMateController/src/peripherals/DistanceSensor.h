@@ -22,7 +22,7 @@ class DistanceSensor {
 
     SoftWireBus *bus;
     VL53L0X *tof;
-    xTaskHandle taskHandle;
+    TaskHandle_t taskHandle;
     distance_callback_t _callback;
     int measurements = 0;
     int currentMillis = 0;

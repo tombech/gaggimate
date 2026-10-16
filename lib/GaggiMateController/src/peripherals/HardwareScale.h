@@ -103,12 +103,12 @@ class HardwareScale {
     HardwareScaleConfig _config;
     scale_reading_callback_t _reading_callback;
     scale_configuration_callback_t _configuration_callback;
-    xTaskHandle taskHandle;
+    TaskHandle_t taskHandle;
     SemaphoreHandle_t _operation_mutex;
     portMUX_TYPE _read_mux = portMUX_INITIALIZER_UNLOCKED;
 
     const char *LOG_TAG = "HardwareScale";
-    static void loopTask(void *arg);
+    [[noreturn]] static void loopTask(void *arg);
 
     RawReading readRaw();
     bool waitUntilReady(unsigned long timeoutMs) const;

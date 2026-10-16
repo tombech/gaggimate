@@ -45,7 +45,7 @@
 #endif
 #endif
 
-const String LOG_TAG = F("Controller");
+static constexpr const char *LOG_TAG = "Controller";
 constexpr uint32_t ADDON_HW_SCALE = 8;
 constexpr double DISPLAY_NEGATIVE_WEIGHT_THRESHOLD = -0.1;
 
@@ -54,6 +54,7 @@ float normalizeWeightForDisplay(double measurement) {
 }
 
 void Controller::setup() {
+    settings.load();
     mode = MODE_STANDBY;
 
     // Web assets are served from this partition. LittleFS (not SPIFFS): SPIFFS
@@ -283,7 +284,7 @@ void Controller::setupBluetooth() {
         }
     });
     comms.onSystemInfo([this](const char *hardware, const char *version, uint32_t protocolVersion, bool dimming, bool pressure,
-                              bool ledControl, bool tof, bool dualBoiler, vector<uint32_t> addons) {
+                              bool ledControl, bool tof, bool dualBoiler, std::vector<uint32_t> addons) {
         onSystemInfo(hardware, version, protocolVersion, dimming, pressure, ledControl, tof, dualBoiler, addons);
     });
     comms.onIncompatibleController([this](const String &info) { onIncompatibleController(info); });
@@ -384,7 +385,7 @@ void Controller::setupBluetooth() {
 }
 
 void Controller::onSystemInfo(const char *hardware, const char *version, uint32_t protocolVersion, bool dimming, bool pressure,
-                              bool ledControl, bool tof, bool dualBoiler, vector<uint32_t> addons) {
+                              bool ledControl, bool tof, bool dualBoiler, std::vector<uint32_t> addons) {
     const bool mismatch = protocolVersion != gm_proto::PROTOCOL_VERSION;
     systemInfo = SystemInfo{.hardware = String(hardware),
                             .version = String(version),
